@@ -1,0 +1,99 @@
+Complaint Logging System.
+
+
+Entities:
+
+Services
+Customers
+Employee (Technicians, Representatives)
+Complaints
+Accounts
+Visits (stores info. about scheduled visits)
+Responses (stores responses made by employee (i.e Representatives / Technicians )
+
+--------------------------------------------------------------------------------------------------------------------------------
+
+Customer actions
+
+Lodge complaint
+Query about service
+
+- register nature and details of complaint
+
+OR
+
+- query account status (payment status, amount due, payment due date)
+
+
+* view list of all complaints. for each complaint (last response date, last responder)
+
+* view specific complaint and all responses.
+
+* view list of past payments with their details.
+
+* Participate in live chat with technician
+
+
+
+Employee actions
+
+* View list of services on dashboard.
+
+* View list of complaints. (shows status- outstanding, resolved)
+
+* Add a service.
+
+* View complaints for specific customer
+
+* Assign complaint to technician
+
+
+Technicians actions
+
+                                  
+*View all complaints assigned
+
+*  View complaints for specific customer
+
+* Respond to complaint from customer
+
+* Schedule visit to address complaint
+
+* View customer complaints with customer details (customer id, name, email, contact number, issue type, detials of issue)
+
+* Schedule live chat with customer.
+
+* Host live chat session with customer
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
