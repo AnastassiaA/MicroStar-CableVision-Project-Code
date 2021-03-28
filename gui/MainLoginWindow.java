@@ -94,6 +94,9 @@ public class MainLoginWindow extends JFrame{
 		employeeButton.addActionListener(new ActionListener() {
 		      public void actionPerformed(ActionEvent e) {
 		    	  
+		    	  EmployeeLogin  employee = new EmployeeLogin();
+		    	  employee.setVisible(true);
+		    	  
 		      }
 		    });
 		
