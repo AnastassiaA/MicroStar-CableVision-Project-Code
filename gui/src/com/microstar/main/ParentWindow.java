@@ -19,6 +19,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTable;
@@ -108,6 +109,39 @@ public class ParentWindow{
 	}
 
 	public void addactionLitsners() {
+		
+		loginButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				if(
+					txtUserId.getText().isBlank() ||
+					txtUserId.getText().isEmpty() ||
+					txtPassword.getText().isBlank() ||
+					txtPassword.getText().isEmpty()
+				) {
+					JOptionPane.showMessageDialog(null,
+							"Username and Password is required",
+							"Error Message", JOptionPane.ERROR_MESSAGE);
+					
+				} else {
+
+					Login userLogin = new Login(txtUserId.getText(), txtPassword.getText());
+					System.out.println("Attempting to login user");
+					System.out.println(userLogin.toString());
+					;
+					
+					JOptionPane.showMessageDialog(null,
+							userLogin.sendLoginRequest(userLogin),
+							"Login Status", JOptionPane.INFORMATION_MESSAGE);
+				}
+				
+				
+				//
+				
+			}
+		});
 
 		//Add customer action menu item to the menu bar
 		fm.add(customerMIt);
@@ -169,7 +203,7 @@ public class ParentWindow{
 				
 		dtp.add(innitialFrame);
 		dtp.add(loginFrame);
-		setTimer(5000);
+		setTimer(3000);
 
 //		dtp.add(customerFrame);
 //		dtp.add(employeeFrame);
