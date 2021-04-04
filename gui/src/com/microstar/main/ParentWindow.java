@@ -1,6 +1,5 @@
 package com.microstar.main;
 
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
@@ -22,9 +21,9 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
-import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
+import com.microstar.dashboards.CustomerRepDashboard;
+
 
 public class ParentWindow{
 
@@ -302,7 +301,8 @@ public class ParentWindow{
 
 	public static void main(String[] args) {
 
-		new ParentWindow();
+		//new ParentWindow();
+		new CustomerRepDashboard();
 	}
 }
 
