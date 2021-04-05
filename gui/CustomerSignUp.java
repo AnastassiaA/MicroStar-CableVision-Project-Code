@@ -198,7 +198,25 @@ public class CustomerSignUp extends JFrame{
 		//action button for the sign up  button
 		signUpButton.addActionListener(new ActionListener() {
 		      public void actionPerformed(ActionEvent e) {
+		    	  Customer customer = new Customer();
+		    	  //id for customer needs to be generated, shown and captured
 		    	  
+		    	  customer.setFirstName(firstNameTextField.getText());
+		    	  
+		    	  customer.setLastName(lastNameTextField.getText());
+		    	  
+		    	  customer.setContactNumber(Integer.parseInt(contactNumberTextField.getText()));
+		    	  
+		    	  String eAddress = emailAddressTextField.getText();
+		    	  
+		    	  Address address = new Address();
+		    	  address.setLotNumber(lotNumberTextField.getText());
+		    	  address.setStreet(streetTextField.getText());
+		    	  address.setCity(communityTextField.getText());
+		    	  
+		    	  customer.setAddress(address);
+		    	  
+		    	  sendCustomer(customer);
 		      }
 		    });
 		
