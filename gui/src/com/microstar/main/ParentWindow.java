@@ -129,15 +129,18 @@ public class ParentWindow{
 					Login userLogin = new Login(txtUserId.getText(), txtPassword.getText());
 					System.out.println("Attempting to login user");
 					System.out.println(userLogin.toString());
-					;
 					
+					System.out.println( userLogin.sendLoginRequest(userLogin) );
+					
+					System.out.println("\ntoken: " + Login.getAuthorizationToken());
+					
+					/*
 					JOptionPane.showMessageDialog(null,
 							userLogin.sendLoginRequest(userLogin),
 							"Login Status", JOptionPane.INFORMATION_MESSAGE);
+					*/
 				}
 				
-				
-				//
 				
 			}
 		});
@@ -301,8 +304,8 @@ public class ParentWindow{
 
 	public static void main(String[] args) {
 
-		//new ParentWindow();
-		new CustomerRepDashboard();
+		new ParentWindow();
+		//new CustomerRepDashboard();
 	}
 }
 
