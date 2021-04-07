@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 04, 2021 at 05:26 AM
+-- Generation Time: Apr 06, 2021 at 09:49 PM
 -- Server version: 10.4.17-MariaDB
 -- PHP Version: 8.0.2
 
@@ -28,6 +28,7 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `account` (
+  `customer_id` int(7) NOT NULL,
   `account_num` int(7) NOT NULL,
   `payment_status` varchar(10) NOT NULL,
   `payment_due_date` date NOT NULL,
@@ -46,7 +47,20 @@ CREATE TABLE `complaint` (
   `complaint_type` varchar(30) NOT NULL,
   `complaint_status` varchar(15) NOT NULL,
   `complaint_desc` tinytext NOT NULL,
-  `from_customer` int(10) NOT NULL
+  `from_customer` int(7) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `complaint_history`
+--
+
+CREATE TABLE `complaint_history` (
+  `customer_id` int(7) NOT NULL,
+  `complaint_id` int(7) NOT NULL,
+  `employee_id` int(7) NOT NULL,
+  `response_id` int(7) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -69,17 +83,6 @@ CREATE TABLE `customer` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `customer_login`
---
-
-CREATE TABLE `customer_login` (
-  `customer_login_id` int(7) NOT NULL,
-  `customer_password` varchar(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `employee`
 --
 
@@ -94,25 +97,13 @@ CREATE TABLE `employee` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `employee_login`
---
-
-CREATE TABLE `employee_login` (
-  `emp_login_id` int(7) NOT NULL,
-  `emp_password` varchar(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `response`
 --
 
 CREATE TABLE `response` (
   `response_id` int(7) NOT NULL,
   `visit date` datetime(6) NOT NULL,
-  `response_desc` tinytext NOT NULL,
-  `to_complaint_id` varchar(10) NOT NULL
+  `response_desc` tinytext NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -127,6 +118,17 @@ CREATE TABLE `service` (
   `service_description` tinytext NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user_credentials`
+--
+
+CREATE TABLE `user_credentials` (
+  `login_id` int(7) NOT NULL,
+  `password` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 --
 -- Indexes for dumped tables
 --
@@ -136,7 +138,8 @@ CREATE TABLE `service` (
 --
 ALTER TABLE `account`
   ADD PRIMARY KEY (`account_num`),
-  ADD UNIQUE KEY `account_num` (`account_num`);
+  ADD UNIQUE KEY `account_num` (`account_num`),
+  ADD KEY `Customer` (`customer_id`);
 
 --
 -- Indexes for table `complaint`
@@ -148,18 +151,21 @@ ALTER TABLE `complaint`
   ADD KEY `link to service` (`serv_id`);
 
 --
+-- Indexes for table `complaint_history`
+--
+ALTER TABLE `complaint_history`
+  ADD KEY `to_customer` (`customer_id`),
+  ADD KEY `to_response` (`response_id`),
+  ADD KEY `to_complaint` (`complaint_id`),
+  ADD KEY `to_employee` (`employee_id`);
+
+--
 -- Indexes for table `customer`
 --
 ALTER TABLE `customer`
   ADD PRIMARY KEY (`customer_ID`),
   ADD UNIQUE KEY `Customer_ID` (`customer_ID`),
   ADD UNIQUE KEY `customer_ID_2` (`customer_ID`);
-
---
--- Indexes for table `customer_login`
---
-ALTER TABLE `customer_login`
-  ADD PRIMARY KEY (`customer_login_id`);
 
 --
 -- Indexes for table `employee`
@@ -169,24 +175,22 @@ ALTER TABLE `employee`
   ADD KEY `emp_id` (`employee_id`);
 
 --
--- Indexes for table `employee_login`
---
-ALTER TABLE `employee_login`
-  ADD PRIMARY KEY (`emp_login_id`),
-  ADD UNIQUE KEY `emp_login_id` (`emp_login_id`);
-
---
 -- Indexes for table `response`
 --
 ALTER TABLE `response`
-  ADD PRIMARY KEY (`response_id`),
-  ADD KEY `employee response` (`to_complaint_id`);
+  ADD PRIMARY KEY (`response_id`);
 
 --
 -- Indexes for table `service`
 --
 ALTER TABLE `service`
   ADD PRIMARY KEY (`service_id`);
+
+--
+-- Indexes for table `user_credentials`
+--
+ALTER TABLE `user_credentials`
+  ADD PRIMARY KEY (`login_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -227,6 +231,25 @@ ALTER TABLE `response`
 --
 ALTER TABLE `service`
   MODIFY `service_id` int(7) NOT NULL AUTO_INCREMENT;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `account`
+--
+ALTER TABLE `account`
+  ADD CONSTRAINT `Customer` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_ID`) ON UPDATE CASCADE;
+
+--
+-- Constraints for table `complaint_history`
+--
+ALTER TABLE `complaint_history`
+  ADD CONSTRAINT `to_complaint` FOREIGN KEY (`complaint_id`) REFERENCES `complaint` (`complaint_id`),
+  ADD CONSTRAINT `to_customer` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_ID`),
+  ADD CONSTRAINT `to_employee` FOREIGN KEY (`employee_id`) REFERENCES `employee` (`employee_id`),
+  ADD CONSTRAINT `to_response` FOREIGN KEY (`response_id`) REFERENCES `response` (`response_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
