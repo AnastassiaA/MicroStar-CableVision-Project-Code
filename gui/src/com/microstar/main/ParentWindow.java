@@ -23,6 +23,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import com.microstar.dashboards.CustomerRepDashboard;
+import com.microstar.dashboards.CustomerRepresentativeDashboard;
 
 
 public class ParentWindow{
@@ -129,6 +130,13 @@ public class ParentWindow{
 					Login userLogin = new Login(txtUserId.getText(), txtPassword.getText());
 					System.out.println("Attempting to login user");
 					System.out.println(userLogin.toString());
+					
+					String role = userLogin.sendLoginRequest(userLogin);
+					
+					if( role.equals("ROLE_SYS_ADM") ) {
+						System.out.println("\n"+ role);
+						CustomerRepresentativeDashboard.main(null);
+					}
 					
 					System.out.println( userLogin.sendLoginRequest(userLogin) );
 					

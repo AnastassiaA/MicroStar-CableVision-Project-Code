@@ -1,8 +1,10 @@
 package com.microstar.dashboards;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.FlowLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
 import javax.swing.ImageIcon;
@@ -23,9 +25,13 @@ import javax.swing.table.DefaultTableModel;
 import com.microstar.models.CompanyServices;
 
 import java.awt.Font;
+import java.awt.GridLayout;
+
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
@@ -43,6 +49,11 @@ public class CustomerRepresentativeDashboard {
 	private JButton chatButton;
 	private JButton logOutButton;
 	private JButton lodgeButton;
+	private JButton addServicesBtn, editServicesBtn, removeServicesBtn, cancelServicesFormBtn;
+	
+	private JTextField serviceIdField;
+	private JTextField serviceNameField;
+	private JTextArea serviceDescriptionField;
 
 	private JInternalFrame complaintFrame;
 	private JInternalFrame liveChatFrame;
@@ -59,6 +70,7 @@ public class CustomerRepresentativeDashboard {
 	private JLabel homeImageLbl;
 	private JLabel welcomeLabel;
 	private JLabel servicesLabel, loadingLabel;
+	private JLabel serviceIdLbl, serviceNameLbl, serviceDescriptionLbl;
 
 	private JRadioButton technicalRadioButton;
 	private JRadioButton accountRadioButton;
@@ -68,7 +80,8 @@ public class CustomerRepresentativeDashboard {
 	private JMenuBar menuBar;
 	private JMenuItem viewOption, addOption, editOption, removeOption;
 	private JMenu mainMenu, customerMenu, serviceMenu, technicianMenu, complaintMenu;
-	private JPanel mainPanel, customerPanel, servicePanel, technicianPanel, complaintPanel, loadingPanel;
+	private JPanel mainPanel, customerPanel, servicePanel, formFieldsPanel,
+					technicianPanel, complaintPanel, loadingPanel, servicesFormPanel;
 
 	private DefaultTableModel serviceTableModel;
 	private JTable serviceTable;
@@ -107,10 +120,47 @@ public class CustomerRepresentativeDashboard {
 		//Buttons
 		servicesBtn = new JButton("Services");
 		complaintButton = new JButton("Complaint");
-		queryButton = new JButton("Query");
-		chatButton = new JButton("Representative");
+		queryButton = new JButton("Customer");
+		chatButton = new JButton("Technician");
 		logOutButton = new JButton("Log Out");
 		lodgeButton = new JButton("Lodge Complaint");
+		
+
+		addServicesBtn = new JButton("Save"); 
+		editServicesBtn = new JButton("Update");
+		removeServicesBtn = new JButton("Delete");
+		cancelServicesFormBtn = new JButton("Cancel");
+		
+		serviceIdField = new JTextField();
+		serviceIdLbl = new JLabel("Service Id");
+		serviceIdField.setSize(10, 15);
+		
+		serviceNameField = new JTextField();
+		serviceNameLbl = new JLabel("Service Name");
+		
+		serviceDescriptionField = new JTextArea();
+		serviceDescriptionLbl = new JLabel("Service Description");
+		
+		servicesFormPanel = new JPanel(new GridLayout(6,1));
+		formFieldsPanel = new JPanel();
+		formFieldsPanel.setLayout(new GridLayout(4,2));
+		
+		formFieldsPanel.add(serviceIdLbl);
+		formFieldsPanel.add(serviceIdField);
+		
+		formFieldsPanel.add(serviceNameLbl);
+		formFieldsPanel.add(serviceNameField);
+		
+		formFieldsPanel.add(serviceDescriptionLbl);
+		formFieldsPanel.add(serviceDescriptionField);
+		
+		formFieldsPanel.add(addServicesBtn);
+		formFieldsPanel.add(cancelServicesFormBtn);
+		
+//		servicesFormPanel.add(serviceIdField);
+//		servicesFormPanel.add(serviceNameField);
+//		servicesFormPanel.add(serviceDescriptionField);
+		
 
 
 		//Initialization of JInternalFrames
@@ -214,18 +264,25 @@ public class CustomerRepresentativeDashboard {
 		serviceMenu.add(editOption);
 		serviceMenu.add(removeOption);
 
-		menuBar.add(mainMenu);
-		menuBar.add(customerMenu);
-		menuBar.add(complaintMenu);
+		//menuBar.add(mainMenu);
+		//menuBar.add(customerMenu);
+		//menuBar.add(complaintMenu);
 		menuBar.add(serviceMenu);
-		menuBar.add(technicianMenu);		
+		//menuBar.add(technicianMenu);		
 
 		servicePanel.add(scrollPane);
+		scrollPane.setVisible(true);
 		servicePanel.setBounds(23, 23, 650, 500);
 		servicePanel.setBackground(Color.BLUE);
 		servicePanel.setVisible(false);
-
-		scrollPane.setVisible(true);
+		
+		servicesFormPanel.setBackground(Color.RED);
+		servicesFormPanel.setVisible(false);
+		
+		formFieldsPanel.add(cancelServicesFormBtn);
+		formFieldsPanel.setBounds(23, 23, 350, 500);
+		formFieldsPanel.setBackground(Color.LIGHT_GRAY);
+		formFieldsPanel.setVisible(false);
 		
 		loadingPanel.setBounds(23, 23, 650, 500);
 		loadingPanel.add(loadingLabel);
@@ -234,8 +291,12 @@ public class CustomerRepresentativeDashboard {
 		serviceFrame.setJMenuBar(menuBar);
 		//this.add(scrollPane);
 		serviceFrame.add(servicePanel);
+		serviceFrame.add(servicesFormPanel);
+		serviceFrame.add(formFieldsPanel);
 		//serviceFrame.add(loadingPanel);
 		serviceFrame.setBounds(10, 40, 1045, 784);
+		serviceFrame.getContentPane().setLayout(null);
+
 
 		//labels
 		homeImageLbl.setBounds(65, 111, 134, 133);
@@ -308,6 +369,8 @@ public class CustomerRepresentativeDashboard {
 
 				serviceFrame.setVisible(true);
 				desktopPane.add(serviceFrame);
+				
+				getServices();
 
 			}
 		});
@@ -330,18 +393,7 @@ public class CustomerRepresentativeDashboard {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				loadingPanel.setVisible(true);
-				System.out.println("Viewing...");
-	
-				for( var service : CompanyServices.prepareList( CompanyServices.getAllCompanyServices() ) ) {
-					System.out.println(service);
-					Object[] obj = { service.getServiceId(), service.getServiceName(), service.getServiceDescription() };
-					serviceTableModel.addRow(obj);
-				}
-				loadingPanel.setVisible(false);
-				scrollPane.setVisible(true);
-				servicePanel.setVisible(true);
-				
+				getServices();
 			}
 		});
 
@@ -351,6 +403,11 @@ public class CustomerRepresentativeDashboard {
 			public void actionPerformed(ActionEvent e) {
 				
 				System.out.println("Adding...");
+
+				scrollPane.setVisible(false);
+				servicePanel.setVisible(false);
+				servicesFormPanel.setVisible(true);
+				formFieldsPanel.setVisible(true);
 				
 			}
 		});
@@ -428,11 +485,45 @@ public class CustomerRepresentativeDashboard {
 				}
 			}
 		});
+		
+		addServicesBtn.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String name = serviceNameField.getText();
+				String description = serviceDescriptionField.getText();
+				
+				CompanyServices newService = new CompanyServices(null, name, description);
+				String response = CompanyServices.addCompanyService(newService);
+				
+				if( response.equals("Saved!") ) {
+					getServices();
+					
+				} else {
+					JOptionPane.showMessageDialog(null,
+							response,
+							"Error",
+							JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		});
 	}//
 
+	public void getServices() {
+		loadingPanel.setVisible(true);
+		System.out.println("Viewing...");
 
-
-
+		for( var service : CompanyServices.prepareList( CompanyServices.getAllCompanyServices() ) ) {
+			System.out.println(service);
+			Object[] obj = { service.getServiceId(), service.getServiceName(), service.getServiceDescription() };
+			serviceTableModel.addRow(obj);
+		}
+		loadingPanel.setVisible(false);
+		servicesFormPanel.setVisible(false);
+		formFieldsPanel.setVisible(false);
+		scrollPane.setVisible(true);
+		servicePanel.setVisible(true);
+	}
 
 	public static void main(String[] args) {
 

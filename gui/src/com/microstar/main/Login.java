@@ -97,8 +97,9 @@ public class Login implements Serializable {
 		
 		Login.storeResponseData( loginResponse.getString("userName"), loginResponse.getString("token"), loginResponse.getString("userRole") );
 		
-		String data = loginResponse.getString("userName") +"  "+ loginResponse.getString("token") +"  "+ loginResponse.getString("userRole");
-		
+		//String data = loginResponse.getString("userName") +"  "+ loginResponse.getString("token") +"  "+ loginResponse.getString("userRole");
+		String data = loginResponse.getString("userRole");
+
 		return data;
 	}
 
