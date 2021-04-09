@@ -3,12 +3,15 @@ package com.microstar.models;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
+import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import com.microstar.main.Login;
 
 public class CompanyServices {
 
@@ -72,6 +75,7 @@ public class CompanyServices {
 		HttpClient client = HttpClient.newHttpClient();
 		HttpRequest request = HttpRequest.newBuilder().uri( URI.create( END_POINT_URL ) )
 				.setHeader("Content-type", "application/json")
+				.setHeader("Authorization", "Bearer " + Login.getAuthorizationToken())
 				.GET()
 				.build();
 
@@ -80,6 +84,72 @@ public class CompanyServices {
 		String response = client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
 				.thenApply(HttpResponse::body)
 				.thenApply(CompanyServices::parseResponse)
+				.join();
+
+		return response;
+	}
+	
+	public static String addCompanyService(CompanyServices newService) {
+		System.out.println("Generating request to add service");
+		System.out.println("Data received:\n"+ newService.toString());
+		System.out.println("Building request body");
+
+		HttpClient client = HttpClient.newHttpClient();
+		HttpRequest request = HttpRequest.newBuilder().uri( URI.create( END_POINT_URL + "add" ) )
+				.setHeader("Content-type", "application/json")
+				.setHeader("Authorization", "Bearer " + Login.getAuthorizationToken())
+				.POST( BodyPublishers.ofString(newService.toString()) )
+				.build();
+
+		System.out.println("Sending request...");
+
+		String response = client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+				.thenApply(HttpResponse::body)
+				.thenApply(data -> data)
+				.join();
+
+		return response;
+	}
+	
+	public static String editCompanyService(CompanyServices updatedService) {
+		System.out.println("Generating request to add service");
+		System.out.println("Data received:\n"+ updatedService.toString());
+		System.out.println("Building request body");
+
+		HttpClient client = HttpClient.newHttpClient();
+		HttpRequest request = HttpRequest.newBuilder().uri( URI.create( END_POINT_URL + "update" ) )
+				.setHeader("Content-type", "application/json")
+				.setHeader("Authorization", "Bearer " + Login.getAuthorizationToken())
+				.POST( BodyPublishers.ofString(updatedService.toString()) )
+				.build();
+
+		System.out.println("Sending request...");
+
+		String response = client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+				.thenApply(HttpResponse::body)
+				.thenApply(data -> data)
+				.join();
+
+		return response;
+	}
+	
+	public static String removeCompanyService(Integer id) {
+		System.out.println("Generating request to add service");
+		System.out.println("Data received:\n"+ id);
+		System.out.println("Building request body");
+
+		HttpClient client = HttpClient.newHttpClient();
+		HttpRequest request = HttpRequest.newBuilder().uri( URI.create( END_POINT_URL + "delete/" + id ) )
+				.setHeader("Content-type", "application/json")
+				.setHeader("Authorization", "Bearer " + Login.getAuthorizationToken())
+				.DELETE()
+				.build();
+
+		System.out.println("Sending request...");
+
+		String response = client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+				.thenApply(HttpResponse::body)
+				.thenApply(data -> data)
 				.join();
 
 		return response;
