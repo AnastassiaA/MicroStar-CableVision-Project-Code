@@ -112,7 +112,7 @@ public class CompanyServices {
 	}
 	
 	public static String editCompanyService(CompanyServices updatedService) {
-		System.out.println("Generating request to add service");
+		System.out.println("Generating request to edit a service");
 		System.out.println("Data received:\n"+ updatedService.toString());
 		System.out.println("Building request body");
 
@@ -134,7 +134,7 @@ public class CompanyServices {
 	}
 	
 	public static String removeCompanyService(Integer id) {
-		System.out.println("Generating request to add service");
+		System.out.println("Generating request to remove a service");
 		System.out.println("Data received:\n"+ id);
 		System.out.println("Building request body");
 
