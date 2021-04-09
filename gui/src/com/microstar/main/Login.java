@@ -92,33 +92,29 @@ public class Login implements Serializable {
 	public static String parseLoginResponse(String response) {
 		System.out.println( "Parsing response" );
 		JSONObject loginResponse = new JSONObject(response);
+		String data = "";
 				
 		//System.out.println( loginResponse.getString("userName") +"\n"+ loginResponse.getString("token") +"\n"+ loginResponse.getString("userRole") );
 		
-		Login.storeResponseData( loginResponse.getString("userName"), loginResponse.getString("token"), loginResponse.getString("userRole") );
+		boolean stored = Login.storeResponseData( loginResponse.getString("userName"),
+													loginResponse.getString("token"),
+													loginResponse.getString("userRole") );
 		
 		//String data = loginResponse.getString("userName") +"  "+ loginResponse.getString("token") +"  "+ loginResponse.getString("userRole");
-		String data = loginResponse.getString("userRole");
+		
+		if( stored ) {
+			data = loginResponse.getString("userRole");
+			
+		} else {
+			data = "Unable to store authorization";
+		}
+		
+		
 
 		return data;
 	}
 
-	public static String parseResponse(String response) {
-
-		JSONArray services = new JSONArray(response);
-
-		for( int a = 0; a < services.length(); a++ ) {
-			JSONObject service = services.getJSONObject(a);
-			int service_id = service.getInt("serviceId");
-			String service_name = service.getString("serviceName");
-			String service_description = service.getString("serviceDescription");
-
-			System.out.println(service_id + "  " + service_name + "  " + service_description);
-		}
-
-		return null;
-	}
-	
+		
 	private static boolean storeResponseData(String user, String token, String role) {
 		
 		try ( FileWriter writer = new FileWriter("Authorization.bin", false) ) {
