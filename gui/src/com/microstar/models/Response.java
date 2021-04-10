@@ -101,7 +101,7 @@ public class Response {
 	}
 	
 	
-	public static String addCompanyService(Response newResponse) {
+	public static String addResponse(Response newResponse) {
 		System.out.println("Generating request to add response");
 		System.out.println("Data received:\n"+ newResponse.toString());
 		System.out.println("Building request body");
@@ -124,7 +124,7 @@ public class Response {
 	}
 	
 	
-	public static String editCompanyService(Response updatedResponse) {
+	public static String editResponse(Response updatedResponse) {
 		System.out.println("Generating request to update response");
 		System.out.println("Data received:\n"+ updatedResponse.toString());
 		System.out.println("Building request body");
@@ -147,7 +147,7 @@ public class Response {
 	}
 	
 	
-	public static String removeCompanyService(Integer id) {
+	public static String removeResponse(Integer id) {
 		System.out.println("Generating request to remove a response");
 		System.out.println("Data received:\n"+ id);
 		System.out.println("Building request body");

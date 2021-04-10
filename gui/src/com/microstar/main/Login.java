@@ -93,7 +93,7 @@ public class Login implements Serializable {
 		System.out.println( "Parsing response" );
 		JSONObject loginResponse = new JSONObject(response);
 		String data = "";
-				
+		
 		//System.out.println( loginResponse.getString("userName") +"\n"+ loginResponse.getString("token") +"\n"+ loginResponse.getString("userRole") );
 		
 		boolean stored = Login.storeResponseData( loginResponse.getString("userName"),
