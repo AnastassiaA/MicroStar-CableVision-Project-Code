@@ -1,0 +1,256 @@
+package com.microstar.forms;
+
+import com.microstar.client.*;
+import java.awt.Font;
+
+import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
+
+public class CustomerSignUp extends JFrame{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JPanel contentPane;
+	private JPanel secondPane;
+	private JButton cancelButton;
+	private JButton signUpButton;
+	private JLabel  firstName;
+	private JLabel  lastName;
+	private JLabel  contactNumber;
+	private JLabel  emailAddress;
+	private JLabel  address;
+	private JLabel  lotNumber;
+	private JLabel  community;
+	private JLabel  street;
+	private JLabel registerTitle;
+	private JLabel signUpImage;
+	private JLabel password;
+	private JLabel reenterPassword;
+	private Image images;
+	private JTextField firstNameTextField;
+	private JTextField lastNameTextField;
+	private JTextField  contactNumberTextField;
+	private JTextField  emailAddressTextField;
+	private JTextField  lotNumberTextField;
+	private JTextField  communityTextField;
+	private JTextField  streetTextField;
+	private JPasswordField passwordField;
+	private JPasswordField reenterPasswordField;
+	
+	
+	
+	
+	public CustomerSignUp() {
+		initilizeCompnents();
+		layoutComponents();
+		addactionLitsners();
+		addToSecondPane();
+		
+		
+	}
+
+	public void initilizeCompnents() {
+		
+		//main jpanel
+		contentPane = new JPanel();
+		
+		//JButtons
+		cancelButton = new JButton("Cancel");
+		signUpButton = new JButton("Sign Up");
+		
+		//JLabels
+		registerTitle = new JLabel(" Register");
+		signUpImage = new JLabel("");
+		firstName = new JLabel("First Name:");
+		lastName = new JLabel("Last Name:");
+		contactNumber = new JLabel("Contact Number:");
+		emailAddress = new JLabel("Email Address:");
+		address = new JLabel("Address");
+		address.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lotNumber = new JLabel("Lot Number:");
+		community = new JLabel("Community:");
+		street = new JLabel("Street:");
+		password = new JLabel("Password:");
+		reenterPassword = new JLabel("Re-Enter Password:");
+		
+		//images
+		images = new ImageIcon(this.getClass().getResource("/Signup-icon.png")).getImage();
+		
+		//text fields
+		firstNameTextField = new JTextField();
+		lastNameTextField = new JTextField();
+	    contactNumberTextField = new JTextField();
+		emailAddressTextField = new JTextField();
+		lotNumberTextField = new JTextField();
+	    communityTextField = new JTextField();
+		streetTextField = new JTextField();
+		passwordField = new JPasswordField();
+		reenterPasswordField = new JPasswordField();
+		
+		
+		//second jpanel
+		secondPane = new JPanel();
+				
+	}
+	
+	public void layoutComponents() {
+		
+		//layout for the main contentPane
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setBounds(100, 100, 573, 683);
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		//layout for the second content pane
+		secondPane.setBounds(0, 0, 557, 683);
+		contentPane.add(secondPane);
+		secondPane.setLayout(null);	
+		
+		//layout for the button component
+		cancelButton.setBounds(212, 607, 89, 23);
+		signUpButton.setBounds(212,563,89, 23);
+		
+		//
+		registerTitle.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 20));
+		registerTitle.setBounds(229, 22, 94, 45);
+		
+		///layout for the Customer register JLabel
+		signUpImage.setIcon(new ImageIcon(images));
+		signUpImage.setBounds(219, 63, 89, 96);
+		
+		//layout for first name label and text field
+		firstName.setBounds(71, 165, 82, 13);
+		firstNameTextField.setBounds(194, 169, 139, 19);
+		firstNameTextField.setColumns(10);
+		
+		//layout for last name label and text field
+		lastName.setBounds(71, 205, 72, 13);
+		lastNameTextField.setBounds(192, 282, 141, 19);
+		lastNameTextField.setColumns(10);
+		
+		
+		//layout for contact number label and text field
+		contactNumber.setBounds(71, 241, 111, 13);
+		contactNumberTextField.setBounds(192, 202, 141, 19);
+		contactNumberTextField.setColumns(10);
+		
+				
+		//layout for email address label and text field
+		emailAddress.setBounds(71, 285, 94, 13);
+		emailAddressTextField.setBounds(192, 240, 141, 19);
+		emailAddressTextField.setColumns(10);
+
+		
+		//layout for address jlabel
+		address.setBounds(229, 311, 72, 13);
+		
+		
+		//layout for lot number label and text field
+		lotNumber.setBounds(71, 346, 82, 13);
+		lotNumberTextField.setBounds(192, 343, 141, 19);
+		lotNumberTextField.setColumns(10);
+		
+		//layout for community label and text field
+		community.setBounds(71, 382, 82, 13);
+		communityTextField.setBounds(192, 379, 141, 19);
+		communityTextField.setColumns(10);
+		
+		//layout for street label and text field
+		street.setBounds(71, 423, 45, 13);
+		streetTextField.setBounds(192, 423, 141, 19);
+		streetTextField.setColumns(10);
+		
+		
+		//Layout for password JLabel and password field
+		password.setBounds(71, 458, 60, 13);
+		passwordField.setBounds(192, 455, 139, 19);
+		
+		//Layout for re-enter password JLabel and password field
+		reenterPassword.setBounds(56, 499, 126, 13);
+		reenterPasswordField.setBounds(192, 496, 139, 19);
+
+	}
+	
+	//action button for the cancel  button
+	public void addactionLitsners() {
+		
+		cancelButton.addActionListener(new ActionListener() {
+		      public void actionPerformed(ActionEvent e) {
+		    	  
+		    	  CustomerLogin customer = new CustomerLogin();
+		    	  customer.setVisible(true);
+		    	
+		    	  
+		      }
+		    });
+		
+		//action button for the sign up  button
+		signUpButton.addActionListener(new ActionListener() {
+		      public void actionPerformed(ActionEvent e) {
+		    	  
+		    	  Customer customer = new Customer();
+		    	  customer.setFirstName(firstNameTextField.getText());		    	  
+		    	  customer.setLastName(lastNameTextField.getText());		    	  
+		    	  customer.setContactNumber(Integer.parseInt(contactNumberTextField.getText()));
+		    	  customer.setEmailAddress(emailAddressTextField.getText());
+		    	  customer.setLotNumber(lotNumberTextField.getText());
+		    	  customer.setStreet(streetTextField.getText());
+		    	  customer.setCity(communityTextField.getText());
+		    	  
+		      }
+		    });
+		
+	}
+	
+	public void addToSecondPane() {
+		
+		//add buttons to the second JPanel
+		secondPane.add(cancelButton);
+		secondPane.add(signUpButton);
+		
+		//Add labels to the second JPanel
+		secondPane.add(registerTitle);
+		secondPane.add(firstName);
+		secondPane.add(lastName);
+		secondPane.add(contactNumber);
+		secondPane.add(emailAddress);
+		secondPane.add(address);
+		secondPane.add(lotNumber);
+		secondPane.add(community);
+		secondPane.add(street);
+		secondPane.add(password);
+		secondPane.add(reenterPassword);
+		
+		
+		//Add images to the second JPanel
+		secondPane.add(signUpImage);
+		
+		//Add text fields to the second JPanel
+		secondPane.add(firstNameTextField);
+		secondPane.add(lastNameTextField);
+		secondPane.add(contactNumberTextField);
+		secondPane.add(emailAddressTextField);
+		secondPane.add(lotNumberTextField);
+		secondPane.add(communityTextField);
+		secondPane.add(streetTextField);
+		
+		
+		//Add password Text fields to the second JPanel
+		secondPane.add(passwordField);
+		secondPane.add(reenterPasswordField);
+		
+		
+	}
+}

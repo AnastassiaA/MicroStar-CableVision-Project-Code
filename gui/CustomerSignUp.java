@@ -14,6 +14,8 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import com.microstar.client.Customer;
+
 public class CustomerSignUp extends JFrame{
 	
 	/**
@@ -198,6 +200,17 @@ public class CustomerSignUp extends JFrame{
 		//action button for the sign up  button
 		signUpButton.addActionListener(new ActionListener() {
 		      public void actionPerformed(ActionEvent e) {
+		    	  Customer customer = new Customer();
+
+		    	  customer.setFirstName(firstNameTextField.getText());		    	  
+		    	  customer.setLastName(lastNameTextField.getText());		    	  
+		    	  customer.setContactNumber(Integer.parseInt(contactNumberTextField.getText()));
+		    	  customer.setEmailAddress(emailAddressTextField.getText());
+		    	  customer.setLotNumber(lotNumberTextField.getText());
+		    	  customer.setStreet(streetTextField.getText());
+		    	  customer.setCity(communityTextField.getText());
+		    	  
+		    	  // TODO password comparison, capture
 		    	  
 		      }
 		    });
