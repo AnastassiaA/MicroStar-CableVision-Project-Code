@@ -1,4 +1,4 @@
-package com.gui;
+package com.microstar.main;
 
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
