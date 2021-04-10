@@ -19,7 +19,7 @@ public class LiveChatServer {
 	
 	public LiveChatServer() {
 		try {
-			serverSocket = new ServerSocket(8000);
+			serverSocket = new ServerSocket(8080);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

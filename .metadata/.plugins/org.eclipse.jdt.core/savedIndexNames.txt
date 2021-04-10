@@ -1,0 +1,3 @@
+INDEX VERSION 1.131+C:\Users\cherr\Documents\GitHub\MicroStar-CableVision-Project-Code\.metadata\.plugins\org.eclipse.jdt.core
+4078669303.index
+554442044.index
