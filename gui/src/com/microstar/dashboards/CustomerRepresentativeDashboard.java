@@ -15,6 +15,8 @@ import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.net.URL;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
@@ -23,6 +25,8 @@ import javax.swing.JTextPane;
 import javax.swing.table.DefaultTableModel;
 
 import com.microstar.models.CompanyServices;
+import com.microstar.models.Complaint;
+import com.microstar.models.Response;
 
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -48,12 +52,12 @@ public class CustomerRepresentativeDashboard {
 	private JButton queryButton;
 	private JButton chatButton;
 	private JButton logOutButton;
-	private JButton lodgeButton;
+	private JButton lodgeButton, responseBtn, submitResponseBtn;
 	private JButton addServicesBtn, editServicesBtn, removeServicesBtn, cancelServicesFormBtn;
 	
-	private JTextField serviceIdField;
-	private JTextField serviceNameField;
-	private JTextArea serviceDescriptionField;
+	private JTextField serviceIdField, complaintIdField;
+	private JTextField serviceNameField, visitDateField;
+	private JTextArea serviceDescriptionField, complaintDescriptionField, responseDescriptionField;
 
 	private JInternalFrame complaintFrame;
 	private JInternalFrame liveChatFrame;
@@ -70,7 +74,7 @@ public class CustomerRepresentativeDashboard {
 	private JLabel homeImageLbl;
 	private JLabel welcomeLabel;
 	private JLabel servicesLabel, loadingLabel;
-	private JLabel serviceIdLbl, serviceNameLbl, serviceDescriptionLbl;
+	private JLabel serviceIdLbl, serviceNameLbl, complaintIdLbl, serviceDescriptionLbl, visitDatLbl, responseDescLbl;
 
 	private JRadioButton technicalRadioButton;
 	private JRadioButton accountRadioButton;
@@ -80,24 +84,34 @@ public class CustomerRepresentativeDashboard {
 	private JMenuBar menuBar;
 	private JMenuItem viewOption, addOption, editOption, removeOption;
 	private JMenu mainMenu, customerMenu, serviceMenu, technicianMenu, complaintMenu;
-	private JPanel mainPanel, customerPanel, servicePanel, formFieldsPanel,
-					technicianPanel, complaintPanel, loadingPanel, servicesFormPanel;
+	private JPanel mainPanel, customerPanel, servicePanel, formFieldsPanel, technicianPanel,
+					complaintPanel, loadingPanel, servicesFormPanel, 
+					complaintDetailsPanel, responseFormPanel;
 
 	private DefaultTableModel serviceTableModel;
 	private JTable serviceTable;
 	private JScrollPane scrollPane;
+	
+	private DefaultTableModel complaintTableModel;
+	private JTable complaintTable;
+	private JScrollPane complaintScrollPane;
 
 	private AccountInfoTable accTable;
 
-	private String[][] serviceTableRows = {
-			{ "4031", "Kundan Kumar", "CSE" },
-			{ "6014", "Anand Jha", "IT" }
-	};
 
 	private String[] serviceTableColumns = {
 			"Service Id",
 			"Service Name",
 			"Service Description"
+	};
+	
+	private String[] complaintTableColumns = {
+			"Complaint Id",
+			"Service Id",
+			"Complaint Type",
+			"Complaint Status",
+			"Complaint Description",
+			"Customer Id"
 	};
 
 
@@ -157,14 +171,10 @@ public class CustomerRepresentativeDashboard {
 		formFieldsPanel.add(addServicesBtn);
 		formFieldsPanel.add(cancelServicesFormBtn);
 		
-//		servicesFormPanel.add(serviceIdField);
-//		servicesFormPanel.add(serviceNameField);
-//		servicesFormPanel.add(serviceDescriptionField);
-		
 
 
 		//Initialization of JInternalFrames
-		complaintFrame = new JInternalFrame("Complaint", false, true, true, true);
+		complaintFrame = new JInternalFrame("Complaints", false, true, true, true);
 		liveChatFrame = new JInternalFrame("Live Chat", false, true, true, true);
 		serviceFrame = new JInternalFrame("Services", false, true, true, true);
 
@@ -207,7 +217,28 @@ public class CustomerRepresentativeDashboard {
 		//serviceTable.setBounds(30, 40, 100, 100);
 		serviceTable.setPreferredScrollableViewportSize(new Dimension(650, 200));
 		serviceTable.setFillsViewportHeight(true);
+		serviceTable.setRowSelectionAllowed(true);
 		scrollPane = new JScrollPane(serviceTable);
+		
+		complaintIdLbl = new JLabel("Complaint Id:");
+		complaintIdField = new JTextField();
+		complaintDescriptionField = new JTextArea();
+		complaintPanel = new JPanel();
+		complaintDetailsPanel = new JPanel(new GridLayout(3, 2));
+		complaintTableModel = new DefaultTableModel(complaintTableColumns, 0);
+		complaintTable = new JTable(complaintTableModel);
+		complaintTable.setPreferredScrollableViewportSize(new Dimension(650, 200));
+		complaintTable.setFillsViewportHeight(true);
+		complaintTable.setRowSelectionAllowed(true);
+		complaintScrollPane = new JScrollPane(complaintTable);
+		
+		visitDatLbl = new JLabel("Visit Date:");
+		responseDescLbl = new JLabel("Response Details:");
+		visitDateField = new JTextField();
+		responseDescriptionField = new JTextArea();
+		responseBtn = new JButton("Respond");
+		submitResponseBtn = new JButton("Submit");
+		responseFormPanel = new JPanel(new GridLayout(4, 2));
 
 
 
@@ -316,27 +347,60 @@ public class CustomerRepresentativeDashboard {
 		//JInternal Frames
 		complaintFrame.setBounds(10, 40, 1045, 784);
 		complaintFrame.getContentPane().setLayout(null);
+		
+		complaintPanel.add(complaintScrollPane);
+		complaintScrollPane.setVisible(true);
+		complaintPanel.setBounds(23, 23, 650, 500);
+		complaintPanel.setBackground(Color.BLUE);
+		complaintPanel.setVisible(false);
+		
+		complaintDetailsPanel.add(complaintIdField);
+		complaintDetailsPanel.add(complaintDescriptionField);
+		complaintDetailsPanel.add(responseBtn);
+		complaintDetailsPanel.setBounds(23, 23, 650, 500);
+		complaintDetailsPanel.setBackground(Color.RED);
+		complaintDetailsPanel.setVisible(false);
+		
+		responseFormPanel.add(complaintIdLbl);
+		responseFormPanel.add(complaintIdField);
+		responseFormPanel.add(visitDatLbl);
+		responseFormPanel.add(visitDateField);
+		responseFormPanel.add(responseDescLbl);
+		responseFormPanel.add(responseDescriptionField);
+		responseFormPanel.add(submitResponseBtn);
+		responseFormPanel.setBounds(23, 23, 650, 500);
+		responseFormPanel.setBackground(Color.RED);
+		responseFormPanel.setVisible(false);
 
 		//textpane added to the complaintFrame
 		textPane = new JTextPane();
 		textPane.setBounds(241, 44, 719, 479);
+		textPane.setVisible(false);
 		complaintFrame.getContentPane().add(textPane);
 
 		//Radio buttons on complaintFrame 
 		technicalRadioButton.setBounds(41, 181, 103, 21);
+		technicalRadioButton.setVisible(false);
 		complaintFrame.getContentPane().add(technicalRadioButton);
 
 
 		accountRadioButton.setBounds(41, 277, 103, 21);
+		accountRadioButton.setVisible(false);
 		complaintFrame.getContentPane().add(accountRadioButton);
 
 
 		serviceRadioButton.setBounds(41, 373, 135, 21);
+		serviceRadioButton.setVisible(false);
 		complaintFrame.getContentPane().add(serviceRadioButton);
 
 
 		lodgeButton.setBounds(534, 567, 215, 39);
+		lodgeButton.setVisible(false);
 		complaintFrame.getContentPane().add(lodgeButton);
+		
+		complaintFrame.getContentPane().add(complaintPanel);
+		complaintFrame.getContentPane().add(complaintDetailsPanel);
+		complaintFrame.getContentPane().add(responseFormPanel);
 
 
 		//JinternalFrame for query
@@ -386,6 +450,114 @@ public class CustomerRepresentativeDashboard {
 
 				complaintFrame.setVisible(true);
 				desktopPane.add(complaintFrame);
+				
+				getComplaints();
+			}
+		});
+		
+		complaintTable.addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+				DefaultTableModel tableModel = (DefaultTableModel) complaintTable.getModel();
+				int selectIndex = complaintTable.getSelectedRow();
+				
+				System.out.println("\n row selected");
+				System.out.println(tableModel.getValueAt(selectIndex, 0).toString());
+				System.out.println(tableModel.getValueAt(selectIndex, 1).toString());
+				System.out.println(tableModel.getValueAt(selectIndex, 2).toString());
+				System.out.println(tableModel.getValueAt(selectIndex, 3).toString());
+				System.out.println(tableModel.getValueAt(selectIndex, 4).toString());
+				System.out.println(tableModel.getValueAt(selectIndex, 5).toString());
+				
+				String responseData = Complaint.getComplaintById( Integer.valueOf( tableModel.getValueAt(selectIndex, 0).toString() ) );
+				
+				Complaint dataObject = Complaint.parseResponse(responseData);
+				
+				complaintIdField.setText(dataObject.getComplaintId().toString());
+				complaintIdField.setEnabled(false);
+				
+				String info = "Customer Id: " + dataObject.getCustomer().getCustomerId() + "\n"
+								+ "Customer Name: " + dataObject.getCustomer().getFirstName() + "  " + dataObject.getCustomer().getLastName() + "\n"
+								+ "Customer Email: " + dataObject.getCustomer().getEmailAddress() + "\n"
+								+ "Contact number" + dataObject.getCustomer().getContactNumber() + "\n"
+								
+								+ "Complaint Type: " + dataObject.getComplaintType() + "\n"
+								+ "Complaint Status: " + dataObject.getComplaintStatus() + "\n"
+								+ "Complaint Details:\n" + dataObject.getComplaintDescription() + "\n"
+						;
+				
+				complaintDescriptionField.setText( info );
+				complaintDetailsPanel.setVisible(true);
+				complaintPanel.setVisible(false);
+				
+			}
+		});
+		
+		responseBtn.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				complaintIdField.setEnabled(false);
+				complaintDetailsPanel.setVisible(false);
+				complaintPanel.setVisible(false);
+				
+				responseFormPanel.setVisible(true);
+				
+			}
+		});
+		
+		submitResponseBtn.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				Response complaintResponse = new Response(null,
+													visitDateField.getText(),
+													responseDescriptionField.getText(),
+													Integer.valueOf(complaintIdField.getText())
+												);
+				
+				String serverSays = Response.addResponse(complaintResponse);
+				
+
+				JOptionPane.showMessageDialog(null, serverSays, "Information", JOptionPane.INFORMATION_MESSAGE);
+				
+				if( serverSays.equals("Saved!") ) {
+					complaintIdField.setEnabled(false);
+					complaintDetailsPanel.setVisible(false);
+					responseFormPanel.setVisible(false);
+					
+					complaintPanel.setVisible(true);
+					
+				}
+				
 			}
 		});
 
@@ -406,6 +578,7 @@ public class CustomerRepresentativeDashboard {
 
 				scrollPane.setVisible(false);
 				servicePanel.setVisible(false);
+				serviceIdField.setEnabled(false);
 				servicesFormPanel.setVisible(true);
 				formFieldsPanel.setVisible(true);
 				
@@ -418,6 +591,7 @@ public class CustomerRepresentativeDashboard {
 			public void actionPerformed(ActionEvent e) {
 				
 				System.out.println("Editing...");
+				serviceIdField.setEnabled(true);
 				
 			}
 		});
@@ -497,6 +671,11 @@ public class CustomerRepresentativeDashboard {
 				String response = CompanyServices.addCompanyService(newService);
 				
 				if( response.equals("Saved!") ) {
+					JOptionPane.showMessageDialog(null,
+							response,
+							"Success",
+							JOptionPane.INFORMATION_MESSAGE);
+					
 					getServices();
 					
 				} else {
@@ -512,10 +691,17 @@ public class CustomerRepresentativeDashboard {
 	public void getServices() {
 		loadingPanel.setVisible(true);
 		System.out.println("Viewing...");
+		
+		//serviceTableModel = new DefaultTableModel(serviceTableColumns, 0);
+		//serviceTable = new JTable(serviceTableModel);
+		
+		DefaultTableModel model = (DefaultTableModel) serviceTable.getModel();
+		model.setRowCount(0);
 
 		for( var service : CompanyServices.prepareList( CompanyServices.getAllCompanyServices() ) ) {
 			System.out.println(service);
 			Object[] obj = { service.getServiceId(), service.getServiceName(), service.getServiceDescription() };
+			
 			serviceTableModel.addRow(obj);
 		}
 		loadingPanel.setVisible(false);
@@ -524,7 +710,33 @@ public class CustomerRepresentativeDashboard {
 		scrollPane.setVisible(true);
 		servicePanel.setVisible(true);
 	}
+	
+	
+	public void getComplaints() {
+		//loadingPanel.setVisible(true);
+		System.out.println("Viewing... complaints");
+		
+		//Complaint.getAllComplaintsTest();
+		DefaultTableModel model = (DefaultTableModel) serviceTable.getModel();
+		model.setRowCount(0);
 
+		for( var complaint : Complaint.prepareList( Complaint.getAllComplaints() ) ) {
+			System.out.println(complaint.toString());
+			
+			Object[] obj = {
+					complaint.getComplaintId(), complaint.getServiceId(), complaint.getComplaintType(),
+					complaint.getComplaintStatus(), complaint.getComplaintDescription(), complaint.getCustomerId()
+				};
+			complaintTableModel.addRow(obj);
+		}
+		//loadingPanel.setVisible(false);
+		//servicesFormPanel.setVisible(false);
+		//formFieldsPanel.setVisible(false);
+		complaintScrollPane.setVisible(true);
+		complaintPanel.setVisible(true);
+	}
+	
+	
 	public static void main(String[] args) {
 
 		EventQueue.invokeLater(new Runnable() {
