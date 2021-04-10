@@ -135,7 +135,9 @@ public class ParentWindow{
 					
 					if( role.equals("ROLE_SYS_ADM") ) {
 						System.out.println("\n"+ role);
+						jf.setVisible(false);
 						CustomerRepresentativeDashboard.main(null);
+						//System.exit(0);
 					}
 					
 					System.out.println( userLogin.sendLoginRequest(userLogin) );

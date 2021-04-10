@@ -23,6 +23,7 @@ import javax.swing.JTextPane;
 import javax.swing.table.DefaultTableModel;
 
 import com.microstar.models.CompanyServices;
+import com.microstar.models.Complaint;
 
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -86,6 +87,10 @@ public class CustomerRepresentativeDashboard {
 	private DefaultTableModel serviceTableModel;
 	private JTable serviceTable;
 	private JScrollPane scrollPane;
+	
+	private DefaultTableModel complaintTableModel;
+	private JTable complaintTable;
+	private JScrollPane complaintScrollPane;
 
 	private AccountInfoTable accTable;
 
@@ -98,6 +103,15 @@ public class CustomerRepresentativeDashboard {
 			"Service Id",
 			"Service Name",
 			"Service Description"
+	};
+	
+	private String[] complaintTableColumns = {
+			"complaintId",
+			"serviceId",
+			"complaintType",
+			"complaintStatus",
+			"complaintDescription",
+			"customerId"
 	};
 
 
@@ -200,6 +214,7 @@ public class CustomerRepresentativeDashboard {
 
 		servicePanel = new JPanel();
 		loadingPanel = new JPanel();
+		complaintPanel = new JPanel();
 
 		// Initializing the JTable
 		serviceTableModel = new DefaultTableModel(serviceTableColumns, 0);
@@ -208,6 +223,12 @@ public class CustomerRepresentativeDashboard {
 		serviceTable.setPreferredScrollableViewportSize(new Dimension(650, 200));
 		serviceTable.setFillsViewportHeight(true);
 		scrollPane = new JScrollPane(serviceTable);
+		
+		complaintTableModel = new DefaultTableModel(complaintTableColumns, 0);
+		complaintTable = new JTable(complaintTableModel);
+		complaintTable.setPreferredScrollableViewportSize(new Dimension(650, 200));
+		complaintTable.setFillsViewportHeight(true);
+		complaintScrollPane = new JScrollPane(complaintTable);
 
 
 
@@ -316,6 +337,12 @@ public class CustomerRepresentativeDashboard {
 		//JInternal Frames
 		complaintFrame.setBounds(10, 40, 1045, 784);
 		complaintFrame.getContentPane().setLayout(null);
+		
+		complaintPanel.add(complaintScrollPane);
+		complaintScrollPane.setVisible(true);
+		complaintPanel.setBounds(23, 23, 650, 500);
+		complaintPanel.setBackground(Color.BLUE);
+		complaintPanel.setVisible(false);
 
 		//textpane added to the complaintFrame
 		textPane = new JTextPane();
@@ -386,6 +413,8 @@ public class CustomerRepresentativeDashboard {
 
 				complaintFrame.setVisible(true);
 				desktopPane.add(complaintFrame);
+				
+				getComplaints();
 			}
 		});
 
@@ -524,7 +553,28 @@ public class CustomerRepresentativeDashboard {
 		scrollPane.setVisible(true);
 		servicePanel.setVisible(true);
 	}
+	
+	
+	public void getComplaints() {
+		//loadingPanel.setVisible(true);
+		System.out.println("Viewing... complaints");
+		
+		Complaint.getAllComplaintsTest();
 
+//		for( var complaint : Complaint.prepareList( Complaint.getAllComplaints() ) ) {
+//			System.out.println(complaint.toString());
+//			
+//			//Object[] obj = {complaint.getComplaintId(), };
+//			//serviceTableModel.addRow(obj);
+//		}
+		//loadingPanel.setVisible(false);
+		//servicesFormPanel.setVisible(false);
+		//formFieldsPanel.setVisible(false);
+		complaintScrollPane.setVisible(true);
+		complaintPanel.setVisible(true);
+	}
+	
+	
 	public static void main(String[] args) {
 
 		EventQueue.invokeLater(new Runnable() {

@@ -6,6 +6,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.HttpRequest.BodyPublishers;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -25,6 +26,12 @@ public class Complaint {
 	private String complaintDescription;
 
 	private int customerId;
+	
+	private List<Response> responses;
+	
+	private Customer customer;
+	
+	
 
 	private static final String END_POINT_URL = "http://localhost:8080/api/customer/complaints/";
 
@@ -39,6 +46,20 @@ public class Complaint {
 		this.complaintStatus = complaintStatus;
 		this.complaintDescription = complaintDescription;
 		this.customerId = customerId;
+	}
+	
+	
+
+	public Complaint(Integer complaintId, int serviceId, String complaintType, String complaintStatus,
+			String complaintDescription, int customerId, List<Response> responses, Customer customer) {
+		this.complaintId = complaintId;
+		this.serviceId = serviceId;
+		this.complaintType = complaintType;
+		this.complaintStatus = complaintStatus;
+		this.complaintDescription = complaintDescription;
+		this.customerId = customerId;
+		this.responses = responses;
+		this.customer = customer;
 	}
 
 	public Integer getComplaintId() {
@@ -88,7 +109,24 @@ public class Complaint {
 	public void setCustomerId(int customerId) {
 		this.customerId = customerId;
 	}
+	
+	public List<Response> getResponses() {
+		return responses;
+	}
 
+	public void setResponses(List<Response> responses) {
+		this.responses = responses;
+	}
+
+	public Customer getCustomer() {
+		return customer;
+	}
+
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
+	}
+
+	
 	@Override
 	public String toString() {
 		JSONObject complaint = new JSONObject();
@@ -101,9 +139,9 @@ public class Complaint {
 		
 		return complaint.toString();
 	}
-	
+		
 
-	public static String getAllCompanyServices() {
+	public static String getAllComplaints() {
 		System.out.println("Generating request to retrieve all complaints");
 		System.out.println("Building request body");
 
@@ -222,8 +260,94 @@ public class Complaint {
 	
 	
 	
+	public static String getAllComplaintsTest() {
+		System.out.println("Generating request to retrieve all complaints");
+		System.out.println("Building request body");
+
+		HttpClient client = HttpClient.newHttpClient();
+		HttpRequest request = HttpRequest.newBuilder().uri( URI.create( END_POINT_URL ) )
+				.setHeader("Content-type", "application/json")
+				.setHeader("Authorization", "Bearer " + Login.getAuthorizationToken())
+				.GET()
+				.build();
+
+		System.out.println("Sending request...");
+
+		client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+				.thenApply(HttpResponse::body)
+				.thenApply(Complaint::parseResponse)
+				.join();
+
+		return null;
+	}
 	
-	
+	public static String parseResponse(String response) {
+		Complaint complaintObject = new Complaint();
+		JSONArray complaints = new JSONArray(response);
+		
+		for( int a = 0; a < complaints.length(); a++ ) {
+			JSONObject complaint = complaints.getJSONObject(a);
+			
+			Integer complaintId = complaint.getInt("complaintId");
+			int serviceId = complaint.getInt("serviceId");
+			String complaintType = complaint.getString("complaintType");
+			String complaintStatus = complaint.getString("complaintStatus");
+			String complaintDescription = complaint.getString("complaintDescription");
+			int customerId = complaint.getInt("customerId");
+			
+			complaintObject.setComplaintId(complaintId);
+			complaintObject.setServiceId(serviceId);
+			complaintObject.setComplaintType(complaintType);
+			complaintObject.setComplaintStatus(complaintStatus);
+			complaintObject.setComplaintDescription(complaintDescription);
+			complaintObject.setCustomerId(customerId);
+			
+			JSONObject cust = complaint.getJSONObject("customer");
+			
+			Integer custId = cust.getInt("customerId");
+			String firstName = cust.getString("firstName");
+			String lastName = cust.getString("lastName");
+			int contactNumber = cust.getInt("contactNumber");
+			String emailAddress = cust.getString("emailAddress");
+			String lotNumber = cust.getString("lotNumber");
+			String street = cust.getString("street");
+			String city = cust.getString("city");
+			
+			Customer customerObject = new Customer(custId, firstName, lastName, contactNumber, emailAddress, lotNumber, street, city);
+			complaintObject.setCustomer(customerObject);
+			
+			JSONArray responses = complaint.getJSONArray("responses");
+			List<Response> list = new ArrayList<Response>();
+			for( int p = 0; p < responses.length(); p++ ) {
+				JSONObject responseObject = responses.getJSONObject(p);
+				
+				Integer responseId = responseObject.getInt("responseId");
+				
+				String visitDate = responseObject.getString("visitDate");
+				
+				String responseDescription = responseObject.getString("responseDescription");
+				
+				int comId = responseObject.getInt("complaintId");
+				
+				Response responseObj = new Response(responseId, visitDate, responseDescription, comId);
+				list.add(responseObj);
+			}
+			complaintObject.setResponses(list);
+			
+			System.out.println(complaint.toString());
+			System.out.println(cust.toString());
+			System.out.println(responses.toString());
+			
+			System.out.println();
+			
+			System.out.println(complaintObject.toString() + "\n" + complaintObject.getResponses().toString() + "\n" + complaintObject.getCustomer().toString());
+			
+			//Complaint complaintObject = new Complaint(complaintId, serviceId, complaintType, complaintStatus, complaintDescription, customerId, responses, cust)
+
+		}
+		
+		return null;
+	}
 	
 	
 	
