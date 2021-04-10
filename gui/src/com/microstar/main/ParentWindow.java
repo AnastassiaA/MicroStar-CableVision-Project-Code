@@ -23,6 +23,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import com.microstar.dashboards.CustomerRepDashboard;
+import com.microstar.dashboards.CustomerRepresentativeDashboard;
 
 
 public class ParentWindow{
@@ -129,15 +130,27 @@ public class ParentWindow{
 					Login userLogin = new Login(txtUserId.getText(), txtPassword.getText());
 					System.out.println("Attempting to login user");
 					System.out.println(userLogin.toString());
-					;
 					
+					String role = userLogin.sendLoginRequest(userLogin);
+					
+					if( role.equals("ROLE_SYS_ADM") ) {
+						System.out.println("\n"+ role);
+						jf.setVisible(false);
+						CustomerRepresentativeDashboard.main(null);
+						//System.exit(0);
+					}
+					
+					System.out.println( userLogin.sendLoginRequest(userLogin) );
+					
+					System.out.println("\ntoken: " + Login.getAuthorizationToken());
+					
+					/*
 					JOptionPane.showMessageDialog(null,
 							userLogin.sendLoginRequest(userLogin),
 							"Login Status", JOptionPane.INFORMATION_MESSAGE);
+					*/
 				}
 				
-				
-				//
 				
 			}
 		});
@@ -301,8 +314,8 @@ public class ParentWindow{
 
 	public static void main(String[] args) {
 
-		//new ParentWindow();
-		new CustomerRepDashboard();
+		new ParentWindow();
+		//new CustomerRepDashboard();
 	}
 }
 
