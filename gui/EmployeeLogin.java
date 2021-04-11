@@ -14,6 +14,8 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import com.microstar.main.Login;
+
 public class EmployeeLogin extends JFrame{
 	
 	/**
@@ -105,7 +107,12 @@ public class EmployeeLogin extends JFrame{
 		//action button for the sign in  button
 		signInButton.addActionListener(new ActionListener() {
 		      public void actionPerformed(ActionEvent e) {
+		    	 
+		    	  	Login login = new Login();
+		    	    login.setUserName((userIdTextField.getText()));
+		    	    login.setPassWord(new String(passwordField.getPassword()));
 		    	    
+		    	    login.sendLoginRequest(login); 
 		      }
 		    });
 		
