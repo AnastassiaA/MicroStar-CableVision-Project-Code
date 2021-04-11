@@ -11,6 +11,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import com.microstar.main.Login;
+
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 
@@ -106,6 +109,11 @@ public class CustomerLogin extends JFrame{
 		signInButton.addActionListener(new ActionListener() {
 		      public void actionPerformed(ActionEvent e) {
 		    	    
+		    	  	Login login = new Login();
+		    	    login.setUserName((userIdTextField.getText()));
+		    	    login.setPassWord(new String(passwordField.getPassword()));
+		    	    
+		    	    login.sendLoginRequest(login); 
 		      }
 		    });
 		
